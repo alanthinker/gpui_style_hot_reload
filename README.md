@@ -4,7 +4,7 @@
 
 # Quick Start
 This project is a demonstration.  
-After you run the program, modifying the style.pjson file and saving, it will immediately apply the latest styles to the UI.
+After you run the program, modifying the styles.pjson file and saving, it will immediately apply the latest styles to the UI.
 But I've only implemented the most commonly used styles. If you'd like to support additional styles, you can simply modify the source code yourself. it's very straightforward.
 
 # About hot-reload layout
