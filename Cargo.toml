@@ -1,0 +1,17 @@
+[package]
+name = "gpui_style_hot_reload"
+version = "0.1.0"
+edition = "2024"
+ 
+[dependencies]
+gpui = "=0.2.1"
+gpui-component = "*"
+rust = { git = "https://github.com/alanthinker/PJson.git", package = "rust" }
+lazy_static = "*"
+serde = "*"
+serde_json = "*"
+anyhow = "*"
+notify = "*"
+tracing = "*"  
+tracing-subscriber = "*"
+futures = "*"

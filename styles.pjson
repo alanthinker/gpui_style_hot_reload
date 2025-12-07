@@ -1,0 +1,88 @@
+{ 
+  // If a control has multiple classes assigned, the styles from the later classes will override the styles with the same names from earlier classes.
+div1: {
+  size_full: true, // Set both width and height to 100%.
+  display: "flex",
+  flex_direction: "column",
+  bg_color: "#eeeeff",
+  margin: 0,
+  margin_left: 5,
+  padding: 10,
+  padding_left: 5,
+  justify_content: "center",
+  align_items: "center",
+  border_width: 1,
+  border_color: "#0000ff",
+  font_size: "16", // allow comma separated after last item
+},
+div2: { 
+  display: "flex",
+  flex_direction: "column",
+  flex_grow: 1,  
+  justify_content: "center",
+  align_items: "start",
+  text_color: "#ff0000",
+  bg_color: "#f8fff8",
+  padding: 5,
+  padding_top: 10,
+  padding_bottom: 10,
+},
+div3: {
+  display: "flex",
+  flex_direction: "row",
+  flex_grow: 1,  
+  justify_content: "space-around",
+  align_items: "center",  
+  bg_color: "#ffffee",
+},
+div4: {
+  display: "flex",
+  flex_direction: "row",
+  justify_content: "space-around",
+  align_items: "center",
+  height: 80,
+  width: 400,
+  bg_color: "#ffffff",
+  gap: 5.0,
+},
+label: {
+  text_color: "#0000ff",
+},
+textinput: { 
+  width: 300,
+  font_size: "16",
+},
+btn1: { 
+  padding: 5,
+  width: 100,
+  height: 40,
+  margin: 10,  
+},
+box: {
+  width: 32,
+  height: 32,
+  border_style: "dashed",
+  border_width: 1,
+  border_color: "#0000ff",
+  shadow: "md",  
+  rounded: "xs",
+},
+box1: {
+  bg_color: "#ff0000",
+},
+box2: {
+  bg_color: "#00ff00",
+},
+box3: {
+  bg_color: "#0000ff",
+},
+box4: {
+  bg_color: "#ffff00",
+},
+box5: {
+  bg_color: "#000000",
+},
+box6: {
+  bg_color: "#ffffff",
+},
+}
