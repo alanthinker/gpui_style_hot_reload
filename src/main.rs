@@ -33,8 +33,7 @@ impl HelloWorld {
             text: SharedString::from(
                 "Please modify the styles in the styles.json file and save it; you'll see the window immediately apply the latest styles.",
             ),
-            text2: SharedString::from("I also developed a feature for hot-reloading layouts, but considering that controlling layouts with JSON is less flexible and more restrictive compared to using Rust code, I eventually abandoned it.  
-Hot-reloading only the styles is sufficient for meeting the requirements of rapid UI development in most cases."),
+            text2: SharedString::from("I've only implemented the most commonly used styles. If you'd like to support additional styles, you can simply modify the source code yourself. it's very straightforward."),
             my_input_state: my_input_state,
             my_progress: 0.0,
             sd: init_style_data(cx, "styles.pjson".to_owned()),
