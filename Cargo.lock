@@ -2432,7 +2432,7 @@ dependencies = [
  "gpui-component",
  "lazy_static",
  "notify",
- "rust",
+ "pjson",
  "serde",
  "serde_json",
  "tracing",
@@ -4154,6 +4154,11 @@ dependencies = [
 ]
 
 [[package]]
+name = "pjson"
+version = "0.1.0"
+source = "git+https://github.com/alanthinker/PJson.git#c5aef87cd4573a126eb71883e557440086824727"
+
+[[package]]
 name = "pkg-config"
 version = "0.3.32"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -4745,11 +4750,6 @@ name = "roxmltree"
 version = "0.20.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "6c20b6793b5c2fa6553b250154b78d6d0db37e72700ae35fad9387a46f487c97"
-
-[[package]]
-name = "rust"
-version = "0.1.0"
-source = "git+https://github.com/alanthinker/PJson.git#478c80c9bb5b7312ae7bd280f4c2888b8df940e6"
 
 [[package]]
 name = "rust-embed"

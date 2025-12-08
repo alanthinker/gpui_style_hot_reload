@@ -1,7 +1,7 @@
 use anyhow::{Context as _, Result};
 use futures::{SinkExt, StreamExt};
 use gpui::{prelude::*, *};
-use rust::PJsonReader;
+use pjson::PJsonReader;
 use serde::Deserialize;
 
 use std::collections::HashMap;
