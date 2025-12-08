@@ -10,8 +10,7 @@ use gpui_component::{
     label, progress, Root,
 };
 
-mod my_style_data;
-use my_style_data::*;
+use gpui_style_hot_reload::my_style_data::*;
 
 struct HelloWorld {
     text: SharedString,
