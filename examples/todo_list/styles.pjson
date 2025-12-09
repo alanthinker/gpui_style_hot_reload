@@ -1,0 +1,39 @@
+{ 
+  // If multiple classes are set for a widget, styles from later classes will override earlier ones with the same property name
+
+root:{
+  display: "flex",
+  flex_direction: "column",
+  flex_grow: 1,  
+  size_full: true,
+  //bg_color: "#ffffff", 
+  padding: 20,
+},
+row:{
+  display: "flex",
+  flex_direction: "row",  
+}, 
+column:{
+  display: "flex",
+  flex_direction: "column",
+  
+}, 
+main_div:{
+  display: "flex",
+  flex_direction: "column",
+  flex_grow: 1,  
+}, 
+todo_item:{
+  display: "flex",
+  flex_direction: "row",  
+  align_items: "center",
+  height:30,
+},
+todo_item_check:{
+  padding: 5,
+  padding_left: 0,
+},
+todo_item_text:{
+  padding: 5,
+},
+}

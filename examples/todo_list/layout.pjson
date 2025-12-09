@@ -1,0 +1,39 @@
+{
+    // can use comments
+    "type": "div",  class: "root", 
+    children: [
+        {
+            type: "div", class: "row", style:{bg_color:"#ffffff"},
+            children: [
+                {
+                    type: "text_input", class: "text_input", bind: "new_item_state",
+                    style:{bg_color:"#ffffff"},
+                },
+                {
+                    type: "button", class: "button", id: "btn_add", label: "Add",
+                    on_click: "btn_add_click",
+                    style:{ width: 150, margin_left: 10, margin_right: 10 },
+                },
+            ]
+        },   
+        {type: "div", class: "main_div",  style:{ margin: 10},
+            children: [
+                {
+                    type: "fn", name: "item_list_elements",
+                },
+            ]
+        },
+        {
+            type: "div", class: "row", style:{ justify_content:"end"},
+            children: [
+               
+                {
+                    type: "button", class: "button", id: "btn_remove_done", label: "Remove done", on_click: "btn_remove_done_click",
+                    style:{ width: 150 },
+                },
+                
+            ]
+        },   
+            
+    ]
+}
