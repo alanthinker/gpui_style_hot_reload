@@ -1,3 +1,6 @@
+
+[中文翻译](https://github.com/alanthinker/gpui_style_hot_reload/blob/main/README-cn.md)
+
 # About Hot Reloading Styles
 This project is a demonstration.  
 After running the program (`cargo run`), modify and save the `styles.pjson` file in the root directory. The updated styles will immediately be applied to the UI.  
