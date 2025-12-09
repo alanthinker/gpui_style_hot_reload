@@ -38,7 +38,6 @@ fn write_element(value: &serde_json::Value, field_name: &str, output: &mut Strin
         }
 
         write_children(obj, output, &inner_indent);
-        writeln!(output, "{}", indent).unwrap(); // newline after element
     } else {
         writeln!(
             output,
@@ -56,9 +55,9 @@ fn write_div(
     indent: &str,
     inner_indent: &mut String,
 ) {
-    write!(output, "{}div()", indent).unwrap();
-
+    write!(output, "\n{}div()", indent).unwrap();
     write_common_attrs(obj, output, inner_indent);
+    *inner_indent = format!("{}    ", indent);
 }
 
 fn write_label(
@@ -76,9 +75,10 @@ fn write_label(
         "\"\"".to_string()
     };
 
-    write!(output, "{}label::Label::new({})", indent, label_content).unwrap();
+    write!(output, "label::Label::new({})", label_content).unwrap();
 
     write_common_attrs(obj, output, inner_indent);
+    *inner_indent = format!("{}    ", indent);
 }
 
 fn write_text_input(
@@ -89,16 +89,12 @@ fn write_text_input(
     inner_indent: &mut String,
 ) {
     if let Some(bind) = obj.get("bind").and_then(|v| v.as_str()) {
-        write!(output, "{}input::TextInput::new(&self.{})", indent, bind).unwrap();
+        write!(output, "input::TextInput::new(&self.{})", bind).unwrap();
     } else {
-        write!(
-            output,
-            "{}input::TextInput::new(/* missing bind */)",
-            indent
-        )
-        .unwrap();
+        write!(output, "input::TextInput::new(/* missing bind */)").unwrap();
     }
     write_common_attrs(obj, output, inner_indent);
+    *inner_indent = format!("{}    ", indent);
 }
 
 fn write_button(
@@ -109,15 +105,16 @@ fn write_button(
     inner_indent: &mut String,
 ) {
     let id = obj.get("id").and_then(|v| v.as_str()).unwrap_or("");
-    write!(output, "{}button::Button::new(\"{}\")", indent, id).unwrap();
+    write!(output, "button::Button::new(\"{}\")", id).unwrap();
 
     if let Some(label) = obj.get("label").and_then(|v| v.as_str()) {
         write!(output, ".label(\"{}\")", label.escape_default()).unwrap();
     }
     write_common_attrs(obj, output, inner_indent);
     if let Some(on_click) = obj.get("on_click").and_then(|v| v.as_str()) {
-        write!(output, r#".on_click(self.{}())"#, on_click).unwrap();
+        write!(output, r#".on_click(Self::{}(cx))"#, on_click).unwrap();
     }
+    *inner_indent = format!("{}    ", indent);
 }
 
 fn write_fn_call(
@@ -128,12 +125,13 @@ fn write_fn_call(
     inner_indent: &mut String,
 ) {
     if let Some(name) = obj.get("name").and_then(|v| v.as_str()) {
-        write!(output, "{}(self.{}())(self, cx)", indent, name).unwrap();
+        write!(output, "(self.{}())(self, cx)", name).unwrap();
     } else {
-        write!(output, "{}// Missing 'name' for fn call", indent).unwrap();
+        writeln!(output, "{}// Missing 'name' for fn call", indent).unwrap();
     }
     *inner_indent = format!("{}    ", indent);
     write_common_attrs(obj, output, inner_indent);
+    *inner_indent = format!("{}    ", indent);
 }
 
 fn write_children(
@@ -145,10 +143,14 @@ fn write_children(
         for child in children {
             if let Some(obj) = child.as_object() {
                 let etype = obj.get("type").and_then(|v| v.as_str()).unwrap_or("div");
-                write!(output, "\n{}    .child(", indent).unwrap();
-
-                write_element(child, etype, output, "");
-                write!(output, ")").unwrap();
+                write!(output, "\n{}.child(", indent).unwrap();
+                let child_indent = format!("{}    ", indent);
+                write_element(child, etype, output, &child_indent);
+                if etype == "div" {
+                    write!(output, "\n{}    )", indent).unwrap();
+                } else {
+                    write!(output, ")").unwrap();
+                }
             } else if let Some(text) = child.as_str() {
                 write!(
                     output,
@@ -165,31 +167,18 @@ fn write_children(
 fn write_common_attrs(
     obj: &serde_json::Map<String, serde_json::Value>,
     output: &mut String,
-    indent: &str,
+    _indent: &str,
 ) {
     if let Some(class) = obj.get("class").and_then(|v| v.as_str()) {
-        write!(output, r#".class("{}", ld)"#, class).unwrap();
+        write!(output, r#".class("{}", sd)"#, class).unwrap();
     }
 
     if let Some(style) = obj.get("style") {
-        writeln!(
+        write!(
             output,
-            "{}    .apply_style_rule(&/* style rule */ serde_json::from_value(json!({})).unwrap())",
-            indent, style
+            ".apply_style_rule(&serde_json::from_value(json!({})).unwrap())",
+            style
         )
         .unwrap();
     }
-}
-
-fn to_pascal_case(s: &str) -> String {
-    s.split('_')
-        .filter(|part| !part.is_empty())
-        .map(|part| {
-            let mut chars = part.chars();
-            match chars.next() {
-                None => String::new(),
-                Some(first) => first.to_uppercase().collect::<String>() + chars.as_str(),
-            }
-        })
-        .collect()
 }

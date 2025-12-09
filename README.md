@@ -22,3 +22,6 @@ cd examples/layout_demo
 cargo run
 ```
 Then modify either `layout.pjson` or `styles.pjson`, save the file, and observe the changes.
+
+This project also provides the capability to convert pjson layout files into Rust source code for UI layout construction. This allows maximum flexibility after initially designing the page layout quickly.  
+For specific conversion methods, please refer to the test case test_pjson_to_rust_code.

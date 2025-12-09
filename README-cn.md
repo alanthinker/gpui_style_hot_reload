@@ -22,3 +22,6 @@ cargo run
 ```
 
 然后修改 layout.pjson 或者 styles.pjson 文件, 保存, 观察变换.
+
+该项目还提供把 pjson 布局文件转换成 rust 源代码来进行 UI 布局的功能. 这样在初期快速设计好页面布局后, 后续可以获得最高的灵活性.
+具体转换方法请参考测试用例 test_pjson_to_rust_code
