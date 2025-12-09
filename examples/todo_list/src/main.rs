@@ -1,6 +1,6 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use alanthinker_dynamic_get_field_macro::{DynamicGet, dynamic_method};
+use alanthinker_dynamic_get_field_macro::{dynamic_method, DynamicGet};
 use alanthinker_dynamic_get_field_trait::DynamicGetter;
 
 #[allow(unused)]
@@ -9,7 +9,8 @@ use anyhow::Context as _;
 use anyhow::Ok;
 
 use gpui::{prelude::*, *};
-use gpui_component::{Root, checkbox, input::InputState};
+use gpui_component::StyledExt;
+use gpui_component::{checkbox, input::InputState, Root};
 
 use std::{cell::RefCell, rc::Rc};
 
@@ -42,6 +43,8 @@ struct TodoList {
     ld: serde_json::Value,
 
     _subscriptions: Vec<Subscription>,
+    sort_by_name: bool,
+    hide_done_items: bool,
 }
 
 impl TodoList {
@@ -54,13 +57,50 @@ impl TodoList {
 
         let mut _subscriptions = vec![];
 
+        let mut todo_items = vec![];
+        todo_items.push(TodoItem {
+            id: 0,
+            text: "Buy milk".into(),
+            done: Rc::new(RefCell::new(false)),
+        });
+        todo_items.push(TodoItem {
+            id: 1,
+            text: "Buy eggs".into(),
+            done: Rc::new(RefCell::new(true)),
+        });
+        todo_items.push(TodoItem {
+            id: 2,
+            text: "Buy bread".into(),
+            done: Rc::new(RefCell::new(false)),
+        });
+        todo_items.push(TodoItem {
+            id: 3,
+            text: "Buy butter".into(),
+            done: Rc::new(RefCell::new(false)),
+        });
+
         TodoList {
             new_item_state: new_item_state,
             max_id: 0,
             sd: init_style_data(cx, "styles.pjson".to_owned()),
             ld: init_layout_data(cx, "layout.pjson".to_owned()),
             _subscriptions,
-            todo_items: vec![],
+            todo_items,
+            sort_by_name: false,
+            hide_done_items: false,
+        }
+    }
+
+    fn sort_items(&mut self) {
+        if self.sort_by_name {
+            self.todo_items.sort_by(|a, b| {
+                a.text
+                    .to_lowercase()
+                    .cmp(&b.text.to_lowercase())
+                    .then_with(|| a.text.cmp(&b.text))
+            });
+        } else {
+            self.todo_items.sort_by_key(|x| x.id);
         }
     }
 
@@ -69,11 +109,40 @@ impl TodoList {
         &self,
     ) -> Box<dyn Fn(&mut TodoList, &mut Context<'_, TodoList>) -> AnyElement + 'static> {
         Box::new({
-            move |this, _cx| {
+            move |this, cx| {
                 let sd = &this.sd;
-                let mut ele = div();
+
+                let mut ele = div().child(
+                    div()
+                        .class("row", sd)
+                        .paddings(Edges::all(px(10.)))
+                        .child(
+                            checkbox::Checkbox::new("chkSort")
+                                .class("todo_item_check", sd)
+                                .label("Sort by name")
+                                .checked(this.sort_by_name)
+                                .on_click(cx.listener(|this, new_checked, _, _| {
+                                    this.sort_by_name = *new_checked;
+                                    this.sort_items();
+                                })),
+                        )
+                        .child(
+                            div().class("row", sd).child(
+                                checkbox::Checkbox::new("chkHide")
+                                    .class("todo_item_check", sd)
+                                    .label("Hide done items")
+                                    .checked(this.hide_done_items)
+                                    .on_click(cx.listener(|this, new_checked, _, _| {
+                                        this.hide_done_items = *new_checked;
+                                    })),
+                            ),
+                        ),
+                );
 
                 for item in &this.todo_items {
+                    if this.hide_done_items && item.get_done() {
+                        continue;
+                    }
                     let done = item.done.clone();
                     let done2 = item.done.clone();
                     let text = item.text.clone();
@@ -109,6 +178,9 @@ impl TodoList {
                 done: Rc::new(RefCell::new(false)),
             });
             this.new_item_state.set_my_text("".into(), window, cx);
+
+            this.sort_items();
+
             cx.notify();
             Ok(())
         })
