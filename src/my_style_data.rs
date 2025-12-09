@@ -159,6 +159,7 @@ pub trait StylableElement: Sized + Styled {
         self2
     }
 
+    fn apply_style_rule_json(self, value: serde_json::value::Value) -> Self;
     fn apply_style_rule(self, rule: &StyleRule) -> Self;
 }
 
@@ -166,6 +167,11 @@ impl<T> StylableElement for T
 where
     T: Styled,
 {
+    fn apply_style_rule_json(mut self, value: serde_json::value::Value) -> Self {
+        self = self.apply_style_rule(&serde_json::from_value(value).unwrap());
+        self
+    }
+
     fn apply_style_rule(mut self, rule: &StyleRule) -> Self {
         if let Some(size_full) = rule.size_full {
             if size_full {

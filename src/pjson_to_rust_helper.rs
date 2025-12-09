@@ -5,6 +5,7 @@ pub fn pjson_to_rust_code(value: &serde_json::Value) -> String {
     let mut output = String::new();
     let indent = "    ".to_string();
     write_element(value, "", &mut output, &indent);
+    writeln!(output, "\n\n//generated code end").unwrap();
     output
 }
 
@@ -174,11 +175,6 @@ fn write_common_attrs(
     }
 
     if let Some(style) = obj.get("style") {
-        write!(
-            output,
-            ".apply_style_rule(&serde_json::from_value(json!({})).unwrap())",
-            style
-        )
-        .unwrap();
+        write!(output, ".apply_style_rule_json(json!({}))", style).unwrap();
     }
 }
