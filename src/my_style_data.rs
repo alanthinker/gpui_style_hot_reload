@@ -1,12 +1,15 @@
 use anyhow::{Context as _, Result};
 use futures::{SinkExt, StreamExt};
 use gpui::{prelude::*, *};
-use pjson::PJsonReader;
 use serde::Deserialize;
 
 use std::collections::HashMap;
 use std::path::PathBuf;
 use std::thread;
+
+use crate::my_context_ext::MyContextExt;
+
+// === Style system definition ===
 
 #[derive(Debug, Clone, Deserialize)]
 #[serde(deny_unknown_fields)]
@@ -34,6 +37,9 @@ pub struct StyleRule {
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub align_items: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub align_self: Option<String>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
     pub flex_direction: Option<String>,
@@ -99,13 +105,14 @@ pub type StyleMap = HashMap<String, StyleRule>;
 
 pub fn load_styles(path: &PathBuf) -> anyhow::Result<MyStyleData> {
     let content = std::fs::read(path.as_path())?;
-    let json = PJsonReader::from_pjson(&content);
+    let json = pjson::PJsonReader::from_pjson(&content);
     let json = String::from_utf8_lossy(&json).to_string();
     let styles: StyleMap = serde_json::from_str(&json)?;
 
     Ok(MyStyleData { style_map: styles })
 }
 
+// Utility function: parse color
 fn parse_color(hex: &str) -> Rgba {
     let r = Rgba::try_from(hex);
     match r {
@@ -194,12 +201,26 @@ where
         if let Some(jc) = &rule.justify_content {
             self = match jc.as_str() {
                 "center" => self.justify_center(),
-                "flex-start" => self.justify_start(),
+                "flex-start" => {
+                    self.style().justify_content = Some(JustifyContent::FlexStart);
+                    self
+                }
                 "start" => self.justify_start(),
-                "flex-end" => self.justify_end(),
+                "flex-end" => {
+                    self.style().justify_content = Some(JustifyContent::FlexEnd);
+                    self
+                }
                 "end" => self.justify_end(),
                 "space-between" => self.justify_between(),
                 "space-around" => self.justify_around(),
+                "space-evenly" => {
+                    self.style().justify_content = Some(JustifyContent::SpaceEvenly);
+                    self
+                }
+                "stretch" => {
+                    self.style().justify_content = Some(JustifyContent::Stretch);
+                    self
+                }
                 _ => self,
             };
         }
@@ -211,6 +232,43 @@ where
                 "flex-end" => self.items_end(),
                 "end" => self.items_end(),
                 "baseline" => self.items_baseline(),
+                "stretch" => {
+                    self.style().align_items = Some(AlignItems::Stretch);
+                    self
+                }
+                _ => self,
+            };
+        }
+        if let Some(ai) = &rule.align_self {
+            self = match ai.as_str() {
+                "center" => {
+                    self.style().align_self = Some(AlignSelf::Center);
+                    self
+                }
+                "flex-start" => {
+                    self.style().align_self = Some(AlignSelf::FlexStart);
+                    self
+                }
+                "start" => {
+                    self.style().align_self = Some(AlignSelf::Start);
+                    self
+                }
+                "flex-end" => {
+                    self.style().align_self = Some(AlignSelf::FlexEnd);
+                    self
+                }
+                "end" => {
+                    self.style().align_self = Some(AlignSelf::End);
+                    self
+                }
+                "baseline" => {
+                    self.style().align_self = Some(AlignSelf::Baseline);
+                    self
+                }
+                "stretch" => {
+                    self.style().align_self = Some(AlignSelf::Stretch);
+                    self
+                }
                 _ => self,
             };
         }
@@ -270,6 +328,7 @@ where
             }
         }
 
+        // Set margin
         let mut margin = Edges {
             top: rule.margin.map(px).unwrap_or(px(0.0)),
             right: rule.margin.map(px).unwrap_or(px(0.0)),
@@ -289,6 +348,7 @@ where
             .mb(margin.bottom)
             .ml(margin.left);
 
+        // Set padding
         let mut padding = Edges {
             top: rule.padding.map(px).unwrap_or(px(0.0)),
             right: rule.padding.map(px).unwrap_or(px(0.0)),
@@ -316,7 +376,7 @@ pub fn init_style_data<T: 'static>(cx: &mut Context<T>, style_path: String) -> M
 where
     T: SetMyStyleData,
 {
-    // If the style_path file does not exist, replace it with ../../{style_path}.
+    // If the style_path file doesn't exist, replace it with ../../{style_path}
     let style_path = if std::path::Path::new(&style_path).exists() {
         style_path
     } else {
@@ -344,6 +404,7 @@ where
 
 pub trait SetMyStyleData {
     fn set_style_data(&mut self, data: MyStyleData);
+    fn get_style_data(&self) -> &MyStyleData;
 }
 
 fn watch_style_data<T: 'static>(cx: &mut Context<T>, style_path: String)
@@ -360,25 +421,31 @@ where
         }
     });
 
-    cx.spawn(async move |entity, cx| loop {
-        match th_receiver.next().await {
-            Some(r) => {
-                tracing::info!("Refresh the window.");
+    cx.my_spawn(async move |entity, cx| {
+        loop {
+            match th_receiver.next().await {
+                Some(r) => {
+                    tracing::info!("Refresh window");
 
-                entity
-                    .update(cx, |this, cx| {
-                        this.set_style_data(r);
-                        cx.notify();
-                    })
-                    .inspect_err(|e| tracing::error!("reload failed: {:?}", e))
-                    .ok();
+                    entity
+                        .upgrade()
+                        .context("entity upgrade fail.")?
+                        .update(cx, |this, cx| {
+                            this.set_style_data(r);
+                            cx.notify(); // Must notify UI to update
+                        })?;
+                }
+                None => {}
             }
-            None => {}
         }
+
+        #[allow(unreachable_code)]
+        Ok(())
     })
     .detach();
 }
 
+// File watcher (hot reload)
 fn run_watcher(
     path: PathBuf,
     be: BackgroundExecutor,
@@ -413,6 +480,6 @@ fn run_watcher(
 
     watcher.watch(&path2, RecursiveMode::NonRecursive)?;
     loop {
-        std::thread::park(); // keep alive
+        std::thread::park(); // keep alive, prevent watcher from being dropped.
     }
 }

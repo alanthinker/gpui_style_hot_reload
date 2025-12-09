@@ -44,6 +44,9 @@ impl SetMyStyleData for HelloWorld {
     fn set_style_data(&mut self, data: MyStyleData) {
         self.sd = data;
     }
+    fn get_style_data(&self) -> &MyStyleData {
+        &self.sd
+    }
 }
 
 impl Render for HelloWorld {
