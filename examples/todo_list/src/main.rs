@@ -9,8 +9,9 @@ use anyhow::Context as _;
 use anyhow::Ok;
 
 use gpui::{prelude::*, *};
-use gpui_component::StyledExt;
+use gpui_component::scroll::ScrollbarAxis;
 use gpui_component::{checkbox, input::InputState, Root};
+use gpui_component::{input, scroll, text, StyledExt};
 
 use std::{cell::RefCell, rc::Rc};
 
@@ -55,31 +56,12 @@ impl TodoList {
             x
         });
 
-        let mut _subscriptions = vec![];
+        let mut _subscriptions =
+            vec![cx.subscribe_in(&new_item_state, window, Self::on_input_event)];
 
-        let mut todo_items = vec![];
-        todo_items.push(TodoItem {
-            id: 0,
-            text: "Buy milk".into(),
-            done: Rc::new(RefCell::new(false)),
-        });
-        todo_items.push(TodoItem {
-            id: 1,
-            text: "Buy eggs".into(),
-            done: Rc::new(RefCell::new(true)),
-        });
-        todo_items.push(TodoItem {
-            id: 2,
-            text: "Buy bread".into(),
-            done: Rc::new(RefCell::new(false)),
-        });
-        todo_items.push(TodoItem {
-            id: 3,
-            text: "Buy butter".into(),
-            done: Rc::new(RefCell::new(false)),
-        });
+        let todo_items = vec![];
 
-        TodoList {
+        let mut entity = TodoList {
             new_item_state: new_item_state,
             max_id: 0,
             sd: init_style_data(cx, "styles.pjson".to_owned()),
@@ -88,7 +70,58 @@ impl TodoList {
             todo_items,
             sort_by_name: false,
             hide_done_items: false,
-        }
+        };
+
+        entity.add_todo_item("Buy milk".into());
+        entity.add_todo_item("Buy eggs".into());
+        entity.add_todo_item("Buy bread".into());
+        entity.add_todo_item("Buy butter".into());
+
+        entity
+    }
+
+    fn on_input_event(
+        &mut self,
+        _state: &Entity<InputState>,
+        event: &input::InputEvent,
+        window: &mut Window,
+        cx: &mut Context<Self>,
+    ) {
+        match event {
+            input::InputEvent::Change => {
+                //
+            }
+            input::InputEvent::PressEnter { secondary: _ } => {
+                self.add_todo_item_ui(window, cx);
+            }
+            input::InputEvent::Focus => {
+                //
+            }
+            input::InputEvent::Blur => {
+                //
+            }
+        };
+    }
+
+    fn add_todo_item(&mut self, text: SharedString) {
+        let this = self;
+        this.max_id += 1;
+        this.todo_items.push(TodoItem {
+            id: this.max_id,
+            text,
+            done: Rc::new(RefCell::new(false)),
+        });
+    }
+
+    fn add_todo_item_ui(&mut self, window: &mut Window, cx: &mut Context<TodoList>) {
+        let this = self;
+        let text = this.new_item_state.get_my_text(cx);
+        Self::add_todo_item(this, text);
+        this.new_item_state.set_my_text("".into(), window, cx);
+
+        this.sort_items();
+
+        cx.notify();
     }
 
     fn sort_items(&mut self) {
@@ -114,8 +147,7 @@ impl TodoList {
 
                 let mut ele = div().child(
                     div()
-                        .class("row", sd)
-                        .paddings(Edges::all(px(10.)))
+                        .class("action2", sd)
                         .child(
                             checkbox::Checkbox::new("chkSort")
                                 .class("todo_item_check", sd)
@@ -127,17 +159,21 @@ impl TodoList {
                                 })),
                         )
                         .child(
-                            div().class("row", sd).child(
-                                checkbox::Checkbox::new("chkHide")
-                                    .class("todo_item_check", sd)
-                                    .label("Hide done items")
-                                    .checked(this.hide_done_items)
-                                    .on_click(cx.listener(|this, new_checked, _, _| {
-                                        this.hide_done_items = *new_checked;
-                                    })),
-                            ),
+                            checkbox::Checkbox::new("chkHide")
+                                .class("todo_item_check", sd)
+                                .label("Hide done items")
+                                .checked(this.hide_done_items)
+                                .on_click(cx.listener(|this, new_checked, _, _| {
+                                    this.hide_done_items = *new_checked;
+                                })),
                         ),
                 );
+
+                let mut container = div()
+                    .id("todo_item_container")
+                    .class("todo_item_container", sd)
+                    .overflow_scroll()
+                    .scrollbar_width(px(10.0));
 
                 for item in &this.todo_items {
                     if this.hide_done_items && item.get_done() {
@@ -147,7 +183,7 @@ impl TodoList {
                     let done2 = item.done.clone();
                     let text = item.text.clone();
                     let id = item.id;
-                    ele = ele.child(
+                    container = container.child(
                         div().class("todo_item", sd).child(
                             checkbox::Checkbox::new(ElementId::Integer(id))
                                 .class("todo_item_check", sd)
@@ -160,6 +196,8 @@ impl TodoList {
                     )
                 }
 
+                ele = ele.child(container);
+
                 ele.into_any_element()
             }
         })
@@ -171,17 +209,7 @@ impl TodoList {
         entity: WeakEntity<TodoList>,
     ) -> Box<dyn Fn(&ClickEvent, &mut Window, &mut App) + 'static> {
         my_listener_box(entity, |this, _event, window, cx| {
-            this.max_id += 1;
-            this.todo_items.push(TodoItem {
-                id: this.max_id,
-                text: this.new_item_state.get_my_text(cx),
-                done: Rc::new(RefCell::new(false)),
-            });
-            this.new_item_state.set_my_text("".into(), window, cx);
-
-            this.sort_items();
-
-            cx.notify();
+            this.add_todo_item_ui(window, cx);
             Ok(())
         })
     }

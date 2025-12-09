@@ -18,11 +18,29 @@ column:{
   flex_direction: "column",
   
 }, 
+action2: {
+  padding: 10,
+},
 main_div:{
-  display: "flex",
-  flex_direction: "column",
-  flex_grow: 1,  
+  // display: "flex",
+  // flex_direction: "column",
+  // flex_grow: 1,  
+  //height: 300,
+  //bg_color: "#eeeeee",
 }, 
+todo_item_container:{
+  // display: "flex",
+  // flex_direction: "column",
+  // justify_content: "start",
+  //flex_grow: 1,  
+  //bg_color: "#999999",
+  border_width: 1,
+  border_color: "#aaaaaa",
+  height: 300,
+ 
+  padding: 10,
+ 
+},
 todo_item:{
   display: "flex",
   flex_direction: "row",  
