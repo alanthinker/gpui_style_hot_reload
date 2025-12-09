@@ -1,0 +1,54 @@
+{
+    // can use comments
+    "type": "div",  class: "div1",
+    children: [
+        {
+            "type": "div", class: "div2", 
+            children: [                
+                {
+                    "type": "label", class: "label", bind: "text", // allow comma separated after last item
+                },
+                {"type": "text_input", class: "textinput", bind: "my_input_state",},
+                {"type": "label", class: "label3", bind: "text2",},
+                {                    
+                    "type": "div", class: "row", style:{align_self:"stretch",justify_content: "space-around", align_items: "center", bg_color:"#ffeeee",
+                        // width:500 
+                    },
+                        children: [
+                            { 
+                                "type": "div", class: "div", style:{bg_color:"#00ffff", height: 45,},
+                                children: ["abc"],
+                            },
+                            {
+                                "type": "label", label: "vvvvv",
+                            },
+                        ]
+                },  
+            ]
+        },
+        {
+             "type": "div", class:"div3", children: [
+            
+                {"type": "text_input", class: "textinput", bind: "my_input_state"},
+                {"type": "button", id:"btn_simple", class:"btn_simple", label:"btn_simple", on_click:"btn_simple_click"}, // on_click event
+                {"type": "button", id:"btn1", class:"btn1", label:"btn1", on_click:"btn1_click"},
+                {"type": "button", id:"btn2", class:"btn2", label:"btn2", on_click:"btn2_click"},
+                
+            ]
+        }, 
+        {
+            "type": "div", class:"div4", children: [                  
+                {"type": "div", class: "box box1"},
+                {"type": "div", class: "box box2"},
+                {"type": "div", class: "box box3"},
+                {"type": "div", class: "box box4"},
+                {"type": "div", class: "box box5"},
+                {"type": "div", class: "box box6"},                    
+            ]
+        }, 
+        {
+            // create some elements by rust code
+            "type": "fn", name:"create_some_elements",
+        }      
+    ]
+}

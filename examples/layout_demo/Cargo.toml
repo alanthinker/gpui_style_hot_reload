@@ -1,14 +1,10 @@
 [package]
-name = "gpui_style_hot_reload"
+name = "layout_demo"
 version = "0.1.0"
 edition = "2024"
 
-[[bin]]
-name = "hello_world"       
-path = "examples/hello_world.rs"
- 
- 
 [dependencies]
+gpui_style_hot_reload = { path = "../.." }
 gpui = "=0.2.1"
 gpui-component = "*"
 pjson = { git = "https://github.com/alanthinker/PJson.git", package = "pjson" }
@@ -24,8 +20,6 @@ tracing-subscriber = "*"
 futures = "*"
 async-compat = "*"
 syn = { version = "*", features = ["full", "derive"] }
-
-[workspace]
-members = [
-    "examples/layout_demo",  
-]
+async-io = "*"
+reqwest = "*"
+inventory = "*"
