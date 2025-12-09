@@ -12,8 +12,10 @@
 *. 把后台 rust 代码编写的元素嵌入到 pjson 布局文件中.
 
 运行方法: (必须切换到 examples/layout_demo 目录运行示例, 因为文件路径是相对路径.)
-`
+
+```
 cd examples/layout_demo
 cargo run
-`
+```
+
 然后修改 layout.pjson 或者 styles.pjson 文件, 保存, 观察变换.
