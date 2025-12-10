@@ -187,7 +187,8 @@ impl TodoList {
                 let mut container = div()
                     .id("todo_item_container")
                     .class("todo_item_container", sd)
-                    .overflow_y_scrollbar();
+                    .overflow_y_scrollbar()
+                    .overflow_y_hidden();
 
                 for id in &this.display_order {
                     let item = &this.todo_items[id];

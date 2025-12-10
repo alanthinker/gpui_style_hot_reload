@@ -53,10 +53,27 @@ pub struct StyleRule {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub flex_basis: Option<f32>,
 
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // pub overflow_x_scrollbar: Option<bool>,
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // pub overflow_y_scrollbar: Option<bool>,
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // pub overflow_x_hidden: Option<bool>,
+    // #[serde(skip_serializing_if = "Option::is_none")]
+    // pub overflow_y_hidden: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub width: Option<f32>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub height: Option<f32>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub min_width: Option<f32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub min_height: Option<f32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub max_width: Option<f32>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub max_height: Option<f32>,
 
     #[serde(skip_serializing_if = "Option::is_name")]
     pub shadow: Option<String>,
@@ -308,6 +325,19 @@ where
         if let Some(h) = rule.height {
             self = self.h(px(h));
         }
+        if let Some(min_width) = rule.min_width {
+            self = self.min_w(px(min_width))
+        }
+        if let Some(min_height) = rule.min_height {
+            self = self.min_h(px(min_height))
+        }
+        if let Some(max_width) = rule.max_width {
+            self = self.max_w(px(max_width))
+        }
+        if let Some(max_height) = rule.max_height {
+            self = self.max_h(px(max_height))
+        }
+
         if let Some(shadow) = &rule.shadow {
             match shadow.as_str() {
                 "2xs" => self = self.shadow_2xs(),
