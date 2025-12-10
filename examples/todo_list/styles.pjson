@@ -27,7 +27,7 @@ main_div:{
   flex_shrink: 1,
   //bg_color: "#eeeeee",
   //flex_basis:300, 
-  min_height: 300,
+  min_height: 300, // must set min_height, otherwise the div's height will grow beyond the window by the content
 }, 
 action2: {
   display: "flex",

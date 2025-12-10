@@ -188,7 +188,7 @@ impl TodoList {
                     .id("todo_item_container")
                     .class("todo_item_container", sd)
                     .overflow_y_scrollbar()
-                    .overflow_y_hidden();
+                    .overflow_y_hidden(); // must set overflow_y_hidden, otherwise the div's height will grow beyond the window by the content
 
                 for id in &this.display_order {
                     let item = &this.todo_items[id];
