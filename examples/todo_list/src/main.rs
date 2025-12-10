@@ -9,13 +9,11 @@ use anyhow::Context as _;
 use anyhow::Ok;
 
 use gpui::{prelude::*, *};
-use gpui_component::scroll::ScrollbarAxis;
+use gpui_component::input;
+use gpui_component::scroll::ScrollableElement;
 use gpui_component::{checkbox, input::InputState, Root};
-use gpui_component::{input, scroll, text, StyledExt};
-use tracing::span::Id;
 
 use std::collections::HashMap;
-use std::{cell::RefCell, rc::Rc};
 
 use gpui_style_hot_reload::my_context_ext::*;
 use gpui_style_hot_reload::my_layout_data::*;
@@ -189,11 +187,9 @@ impl TodoList {
                 let mut container = div()
                     .id("todo_item_container")
                     .class("todo_item_container", sd)
-                    .overflow_scroll()
-                    .scrollbar_width(px(10.0));
+                    .overflow_y_scrollbar();
 
                 for id in &this.display_order {
-                    tracing::trace!("Processing item id {:?}", id);
                     let item = &this.todo_items[id];
                     tracing::trace!("Processing item {:?}", &item);
                     if this.hide_done_items && item.done {
@@ -304,7 +300,7 @@ fn main() {
                 },
                 |window, cx: &mut App| {
                     let view = cx.new(|cx| TodoList::new(window, cx));
-                    cx.new(|cx| Root::new(view.into(), window, cx))
+                    cx.new(|cx| Root::new(view, window, cx))
                 },
             )
             .unwrap();

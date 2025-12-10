@@ -6,7 +6,7 @@
             type: "div", class: "row", style:{bg_color:"#ffffff"},
             children: [
                 {
-                    type: "text_input", class: "text_input", bind: "new_item_state",
+                    type: "input", class: "text_input", bind: "new_item_state",
                     style:{bg_color:"#ffffff"},
                 },
                 {

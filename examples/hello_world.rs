@@ -69,7 +69,7 @@ impl Render for HelloWorld {
             .child(
                 div()
                     .class("div3", sd)
-                    .child(input::TextInput::new(&self.my_input_state).class("textinput", sd))
+                    .child(input::Input::new(&self.my_input_state).class("textinput", sd))
                     .child(
                         Button::new("btn_simple")
                             .class("btn_simple", sd)
@@ -114,7 +114,7 @@ fn main() {
                 },
                 |window, cx: &mut App| {
                     let view = cx.new(|cx| HelloWorld::new(window, cx));
-                    cx.new(|cx| Root::new(view.into(), window, cx))
+                    cx.new(|cx| Root::new(view, window, cx))
                 },
             )
             .unwrap();

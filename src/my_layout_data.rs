@@ -294,7 +294,7 @@ where
             serde_json::Value::String(bind) => {
                 if let Some(state) = e.get_field(bind) {
                     if let Some(state) = state.downcast_ref::<Entity<InputState>>() {
-                        ele.replace(input::TextInput::new(state));
+                        ele.replace(input::Input::new(state));
                     } else {
                         tracing::error!(
                             "state.downcast_ref::<Entity<InputState>> fail. bind={}",
@@ -438,7 +438,9 @@ where
                             match etype {
                                 "div" => ele = ele.child(add_div_by_json(child, e, cx)),
                                 "label" => ele = ele.child(add_label_by_json(child, e)),
-                                "text_input" => ele = ele.child(add_text_input_by_json(child, e)),
+                                "text_input" | "input" => {
+                                    ele = ele.child(add_text_input_by_json(child, e))
+                                }
                                 "button" => ele = ele.child(add_button_by_json(child, e, cx)),
                                 "fn" => ele = ele.child(add_fn_by_json(child, e, cx)),
                                 _ => {
