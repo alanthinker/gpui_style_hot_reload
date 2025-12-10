@@ -9,9 +9,9 @@ use anyhow::Context as _;
 use anyhow::Ok;
 
 use gpui::{prelude::*, *};
-use gpui_component::input;
-use gpui_component::scroll::ScrollableElement;
+use gpui_component::scroll::{ScrollableElement, ScrollbarShow};
 use gpui_component::{checkbox, input::InputState, Root};
+use gpui_component::{input, theme, ActiveTheme, Theme, ThemeRegistry};
 
 use std::collections::HashMap;
 
@@ -160,7 +160,7 @@ impl TodoList {
             move |this, cx| {
                 let sd = &this.sd;
 
-                let mut ele = div().child(
+                let mut ele = div().class("main_div", sd).child(
                     div()
                         .class("action2", sd)
                         .child(
@@ -289,6 +289,9 @@ fn main() {
 
     app.run(|cx: &mut App| {
         gpui_component::init(cx);
+
+        let theme = Theme::global_mut(cx);
+        theme.scrollbar_show = ScrollbarShow::Always;
 
         let bounds = Bounds::centered(None, size(px(600.), px(500.0)), cx);
 

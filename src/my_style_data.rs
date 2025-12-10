@@ -51,6 +51,9 @@ pub struct StyleRule {
     pub flex_shrink: Option<f32>,
 
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub flex_basis: Option<f32>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub width: Option<f32>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub height: Option<f32>,
@@ -291,6 +294,12 @@ where
         }
         if let Some(flex_shrink) = rule.flex_shrink {
             self.style().flex_shrink = Some(flex_shrink);
+        }
+
+        if let Some(flex_basis) = rule.flex_basis {
+            self.style().flex_basis = Some(Length::Definite(DefiniteLength::Absolute(
+                AbsoluteLength::Pixels(px(flex_basis)),
+            )));
         }
 
         if let Some(w) = rule.width {

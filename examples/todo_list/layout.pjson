@@ -16,12 +16,8 @@
                 },
             ]
         },   
-        {type: "div", class: "main_div",  style:{ margin: 10},
-            children: [
-                {
-                    type: "fn", name: "item_list_elements",
-                },
-            ]
+        {
+            type: "fn", name: "item_list_elements",
         },
         {
             type: "div", class: "row", style:{ justify_content:"end"},
