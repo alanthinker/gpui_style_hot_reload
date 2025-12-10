@@ -97,6 +97,7 @@ pub struct StyleRule {
     pub gap: Option<f32>,
 }
 
+#[derive(Debug)]
 pub struct MyStyleData {
     pub style_map: StyleMap,
 }
