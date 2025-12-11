@@ -53,14 +53,6 @@ pub struct StyleRule {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub flex_basis: Option<f32>,
 
-    // #[serde(skip_serializing_if = "Option::is_none")]
-    // pub overflow_x_scrollbar: Option<bool>,
-    // #[serde(skip_serializing_if = "Option::is_none")]
-    // pub overflow_y_scrollbar: Option<bool>,
-    // #[serde(skip_serializing_if = "Option::is_none")]
-    // pub overflow_x_hidden: Option<bool>,
-    // #[serde(skip_serializing_if = "Option::is_none")]
-    // pub overflow_y_hidden: Option<bool>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub width: Option<f32>,
     #[serde(skip_serializing_if = "Option::is_none")]

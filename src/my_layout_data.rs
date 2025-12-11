@@ -4,6 +4,7 @@ use gpui_component::{
     button,
     input::{self, InputState},
     label,
+    scroll::ScrollableElement,
 };
 use std::{any::Any, path::PathBuf, thread};
 
@@ -143,7 +144,43 @@ where
     ele = set_attributes(ele, value, e);
     ele = set_children(ele, value, e, cx);
 
-    ele.into_any_element()
+    let mut overflow_x_scrollbar = false;
+    let mut overflow_y_scrollbar = false;
+
+    if let Some(obj) = value.as_object() {
+        if let Some(serde_json::Value::Bool(true)) = obj.get("overflow_x_hidden") {
+            ele = ele.overflow_x_hidden();
+        }
+        if let Some(serde_json::Value::Bool(true)) = obj.get("overflow_y_hidden") {
+            ele = ele.overflow_y_hidden();
+        }
+        if let Some(serde_json::Value::Bool(true)) = obj.get("overflow_x_scrollbar") {
+            overflow_x_scrollbar = true;
+        }
+        if let Some(serde_json::Value::Bool(true)) = obj.get("overflow_y_scrollbar") {
+            overflow_y_scrollbar = true;
+        }
+    } else {
+        tracing::error!("Expected JSON object.");
+    }
+
+    // 🔥 关键点：如果有 scrollbar，就转换成 Scrollable，然后立即 into_any_element()
+    if overflow_x_scrollbar || overflow_y_scrollbar {
+        let ele2;
+        if overflow_x_scrollbar && overflow_y_scrollbar {
+            tracing::error!("If both scrollbars are set simultaneously, the scrollbars won't appear instead. The reason is unknown. It's recommended to set only the vertical (y-axis) scrollbar.");
+            ele2 = ele.overflow_scrollbar();
+        } else if overflow_x_scrollbar {
+            ele2 = ele.overflow_x_scrollbar();
+        } else if overflow_y_scrollbar {
+            ele2 = ele.overflow_y_scrollbar();
+        } else {
+            panic!("This should never happen.")
+        }
+        ele2.into_any_element()
+    } else {
+        ele.into_any_element()
+    }
 }
 
 pub fn add_button_by_json<E>(value: &serde_json::Value, e: &mut E, cx: &Context<E>) -> AnyElement
