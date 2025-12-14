@@ -45,20 +45,21 @@ dependencies = [
 [[package]]
 name = "alanthinker_dynamic_get_field_macro"
 version = "0.1.0"
-source = "git+https://github.com/alanthinker/alanthinker_dynamic_get_field_macro.git#d8e2cbaa6ed06d24e1dd8161517ff2b624b20525"
+source = "git+https://github.com/alanthinker/alanthinker_dynamic_get_field_macro.git#edd24ec57a848847c95aff215fdd754bfa204e49"
 dependencies = [
  "alanthinker_dynamic_get_field_trait",
  "inventory",
  "proc-macro2",
  "quote",
- "syn 1.0.109",
+ "syn 2.0.111",
 ]
 
 [[package]]
 name = "alanthinker_dynamic_get_field_trait"
 version = "0.1.0"
-source = "git+https://github.com/alanthinker/alanthinker_dynamic_get_field_trait.git#0d8ef7ef6679a45a0c39dab5f479aa1f81803894"
+source = "git+https://github.com/alanthinker/alanthinker_dynamic_get_field_trait.git#7c7da1311ab8baf1eb835adb45beecc7f686be12"
 dependencies = [
+ "anyhow",
  "inventory",
 ]
 
