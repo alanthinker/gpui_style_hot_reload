@@ -13,7 +13,9 @@ use gpui::{prelude::*, *};
 use gpui_component::{
     button::Button,
     input::{self, InputState},
-    progress, Root,
+    progress,
+    scroll::ScrollbarShow,
+    Root, Theme,
 };
 use tracing::*;
 
@@ -295,6 +297,9 @@ fn main() {
 
     app.run(|cx: &mut App| {
         gpui_component::init(cx);
+
+        let theme = Theme::global_mut(cx);
+        theme.scrollbar_show = ScrollbarShow::Always;
 
         let bounds = Bounds::centered(None, size(px(800.), px(800.0)), cx);
 

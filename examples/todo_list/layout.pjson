@@ -14,6 +14,11 @@
                     on_click: "btn_add_click",
                     style:{ width: 150, margin_left: 10, margin_right: 10 },
                 },
+                {
+                    type: "button", class: "button", id: "btn_bulk_add", label: "Bulk Add",
+                    on_click: "btn_bulk_add_click",
+                    style:{ width: 150, margin_left: 10, margin_right: 10 },
+                },
             ]
         },   
         {

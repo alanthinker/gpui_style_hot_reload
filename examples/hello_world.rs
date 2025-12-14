@@ -7,7 +7,9 @@ use gpui::{prelude::*, *};
 use gpui_component::{
     button::Button,
     input::{self, InputState},
-    label, progress, Root,
+    label, progress,
+    scroll::ScrollbarShow,
+    Root, Theme,
 };
 
 use gpui_style_hot_reload::my_style_data::*;
@@ -103,6 +105,9 @@ fn main() {
 
     app.run(|cx: &mut App| {
         gpui_component::init(cx);
+
+        let theme = Theme::global_mut(cx);
+        theme.scrollbar_show = ScrollbarShow::Always;
 
         let bounds = Bounds::centered(None, size(px(800.), px(800.0)), cx);
 

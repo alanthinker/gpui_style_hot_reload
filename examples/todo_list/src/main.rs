@@ -69,10 +69,10 @@ impl TodoList {
             hide_done_items: false,
         };
 
-        entity.add_todo_item("Buy milk".into());
-        entity.add_todo_item("Buy eggs".into());
-        entity.add_todo_item("Buy bread".into());
-        entity.add_todo_item("Buy butter".into());
+        entity.add_todo_item("Buy milk".into(), false);
+        entity.add_todo_item("Buy eggs".into(), true);
+        entity.add_todo_item("Buy bread".into(), false);
+        entity.add_todo_item("Buy butter".into(), false);
 
         entity.sort_items();
 
@@ -102,18 +102,11 @@ impl TodoList {
         };
     }
 
-    fn add_todo_item(&mut self, text: SharedString) {
+    fn add_todo_item(&mut self, text: SharedString, done: bool) {
         let this = self;
         this.max_id += 1;
         let id = this.max_id;
-        this.todo_items.insert(
-            id,
-            TodoItem {
-                id,
-                text,
-                done: false,
-            },
-        );
+        this.todo_items.insert(id, TodoItem { id, text, done });
     }
 
     fn add_todo_item_ui(&mut self, window: &mut Window, cx: &mut Context<TodoList>) {
@@ -122,10 +115,25 @@ impl TodoList {
         if text.is_empty() {
             return;
         }
-        Self::add_todo_item(this, text);
+        Self::add_todo_item(this, text, false);
         this.new_item_state.set_my_text("".into(), window, cx);
 
         this.sort_items();
+
+        cx.notify();
+    }
+
+    fn add_bulk_todo_item_ui(&mut self, window: &mut Window, cx: &mut Context<TodoList>) {
+        let this = self;
+
+        tracing::error!("begin add_bulk_todo_item_ui.");
+        for i in 0..1_000 {
+            let text = format!("{}_{:?}", i, std::time::SystemTime::now()).into();
+            Self::add_todo_item(this, text, true);
+        }
+        tracing::error!("end add_bulk_todo_item_ui.");
+        this.sort_items();
+        tracing::info!("end sort_items.");
 
         cx.notify();
     }
@@ -234,6 +242,17 @@ impl TodoList {
     }
 
     #[dynamic_method(TodoList)]
+    fn btn_bulk_add_click(
+        &self,
+        entity: WeakEntity<TodoList>,
+    ) -> Box<dyn Fn(&ClickEvent, &mut Window, &mut App) + 'static> {
+        my_listener_box(entity, |this, _event, window, cx| {
+            this.add_bulk_todo_item_ui(window, cx);
+            Ok(())
+        })
+    }
+
+    #[dynamic_method(TodoList)]
     fn btn_remove_done_click(
         &self,
         entity: WeakEntity<TodoList>,
@@ -294,7 +313,7 @@ fn main() {
         let theme = Theme::global_mut(cx);
         theme.scrollbar_show = ScrollbarShow::Always;
 
-        let bounds = Bounds::centered(None, size(px(600.), px(500.0)), cx);
+        let bounds = Bounds::centered(None, size(px(780.0), px(500.0)), cx);
 
         cx.spawn(async move |cx| {
             cx.open_window(

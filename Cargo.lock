@@ -45,9 +45,8 @@ dependencies = [
 [[package]]
 name = "alanthinker_dynamic_get_field_macro"
 version = "0.1.0"
-source = "git+https://github.com/alanthinker/alanthinker_dynamic_get_field_macro.git#6ad0072a1425e0f05463ed561f142a8a9291a51f"
 dependencies = [
- "alanthinker_dynamic_get_field_trait 0.1.0 (git+https://github.com/alanthinker/alanthinker_dynamic_get_field_macro.git)",
+ "alanthinker_dynamic_get_field_trait 0.1.0 (git+https://github.com/alanthinker/alanthinker_dynamic_get_field_trait.git)",
  "inventory",
  "proc-macro2",
  "quote",
@@ -57,15 +56,15 @@ dependencies = [
 [[package]]
 name = "alanthinker_dynamic_get_field_trait"
 version = "0.1.0"
-source = "git+https://github.com/alanthinker/alanthinker_dynamic_get_field_macro.git#6ad0072a1425e0f05463ed561f142a8a9291a51f"
 dependencies = [
+ "anyhow",
  "inventory",
 ]
 
 [[package]]
 name = "alanthinker_dynamic_get_field_trait"
 version = "0.1.0"
-source = "git+https://github.com/alanthinker/alanthinker_dynamic_get_field_trait.git#bea7fbc6d814d206918699c0cb920a6984b594a4"
+source = "git+https://github.com/alanthinker/alanthinker_dynamic_get_field_trait.git#0d8ef7ef6679a45a0c39dab5f479aa1f81803894"
 dependencies = [
  "inventory",
 ]
@@ -271,9 +270,9 @@ dependencies = [
 
 [[package]]
 name = "async-compression"
-version = "0.4.35"
+version = "0.4.36"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "07a926debf178f2d355197f9caddb08e54a9329d44748034bba349c5848cb519"
+checksum = "98ec5f6c2f8bc326c994cb9e241cc257ddaba9afa8555a43cffbb5dd86efaa37"
 dependencies = [
  "compression-codecs",
  "compression-core",
@@ -984,9 +983,9 @@ dependencies = [
 
 [[package]]
 name = "compression-codecs"
-version = "0.4.34"
+version = "0.4.35"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "34a3cbbb8b6eca96f3a5c4bf6938d5b27ced3675d69f95bb51948722870bc323"
+checksum = "b0f7ac3e5b97fdce45e8922fb05cae2c37f7bbd63d30dd94821dacfd8f3f2bf2"
 dependencies = [
  "compression-core",
  "deflate64",
@@ -2404,7 +2403,7 @@ name = "gpui_style_hot_reload"
 version = "0.1.0"
 dependencies = [
  "alanthinker_dynamic_get_field_macro",
- "alanthinker_dynamic_get_field_trait 0.1.0 (git+https://github.com/alanthinker/alanthinker_dynamic_get_field_trait.git)",
+ "alanthinker_dynamic_get_field_trait 0.1.0",
  "anyhow",
  "async-compat",
  "futures",
@@ -2736,7 +2735,7 @@ dependencies = [
  "tokio",
  "tower-service",
  "tracing",
- "windows-registry 0.5.3",
+ "windows-registry 0.6.1",
 ]
 
 [[package]]
@@ -2811,9 +2810,9 @@ checksum = "7aedcccd01fc5fe81e6b489c15b247b8b0690feb23304303a9e560f37efc560a"
 
 [[package]]
 name = "icu_properties"
-version = "2.1.1"
+version = "2.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e93fcd3157766c0c8da2f8cff6ce651a31f0810eaa1c51ec363ef790bbb5fb99"
+checksum = "020bfc02fe870ec3a66d93e677ccca0562506e5872c650f893269e08615d74ec"
 dependencies = [
  "icu_collections",
  "icu_locale_core",
@@ -2825,9 +2824,9 @@ dependencies = [
 
 [[package]]
 name = "icu_properties_data"
-version = "2.1.1"
+version = "2.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "02845b3647bb045f1100ecd6480ff52f34c35f82d9880e029d329c21d1054899"
+checksum = "616c294cf8d725c6afcd8f55abc17c56464ef6211f9ed59cccffe534129c77af"
 
 [[package]]
 name = "icu_provider"
@@ -3164,7 +3163,7 @@ name = "layout_demo"
 version = "0.1.0"
 dependencies = [
  "alanthinker_dynamic_get_field_macro",
- "alanthinker_dynamic_get_field_trait 0.1.0 (git+https://github.com/alanthinker/alanthinker_dynamic_get_field_trait.git)",
+ "alanthinker_dynamic_get_field_trait 0.1.0",
  "anyhow",
  "async-compat",
  "async-io",
@@ -4262,7 +4261,7 @@ dependencies = [
 [[package]]
 name = "pjson"
 version = "0.1.0"
-source = "git+https://github.com/alanthinker/PJson.git#c5aef87cd4573a126eb71883e557440086824727"
+source = "git+https://github.com/alanthinker/PJson.git#112d61568b4f7494a0ee7668933b34c87bb7c675"
 
 [[package]]
 name = "pkg-config"
@@ -6060,7 +6059,7 @@ name = "todo_list"
 version = "0.1.0"
 dependencies = [
  "alanthinker_dynamic_get_field_macro",
- "alanthinker_dynamic_get_field_trait 0.1.0 (git+https://github.com/alanthinker/alanthinker_dynamic_get_field_trait.git)",
+ "alanthinker_dynamic_get_field_trait 0.1.0",
  "anyhow",
  "async-compat",
  "async-io",
@@ -6360,9 +6359,9 @@ dependencies = [
 
 [[package]]
 name = "tree-sitter-language"
-version = "0.1.5"
+version = "0.1.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c4013970217383f67b18aef68f6fb2e8d409bc5755227092d32efb0422ba24b8"
+checksum = "4ae62f7eae5eb549c71b76658648b72cc6111f2d87d24a1e31fa907f4943e3ce"
 
 [[package]]
 name = "triomphe"
@@ -7127,6 +7126,17 @@ dependencies = [
  "windows-link 0.1.3",
  "windows-result 0.3.4",
  "windows-strings 0.4.2",
+]
+
+[[package]]
+name = "windows-registry"
+version = "0.6.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "02752bf7fbdcce7f2a27a742f798510f3e5ad88dbe84871e5168e2120c3d5720"
+dependencies = [
+ "windows-link 0.2.1",
+ "windows-result 0.4.1",
+ "windows-strings 0.5.1",
 ]
 
 [[package]]

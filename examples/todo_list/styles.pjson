@@ -27,7 +27,7 @@ main_div:{
   flex_shrink: 1,
   //bg_color: "#eeeeee",
   //flex_basis:300, 
-  min_height: 300, // must set min_height, otherwise the div's height will grow beyond the window by the content
+  height: 300, // The parent container's height must be set; otherwise, child elements will expand the parent's height. Even though height: 300 is set, the actual height can exceed 300 due to flex_grow: 1. However, do not set min_height, otherwise the heights of other divs may be compressed—the reason for this is unclear.
 }, 
 action2: {
   display: "flex",

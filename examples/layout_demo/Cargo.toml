@@ -8,9 +8,9 @@ gpui_style_hot_reload = { path = "../.." }
 gpui = { workspace = true }
 gpui-macros = { workspace = true }
 gpui-component = { workspace = true }
-pjson = { git = "https://github.com/alanthinker/PJson.git", package = "pjson" }
-alanthinker_dynamic_get_field_macro = { git = "https://github.com/alanthinker/alanthinker_dynamic_get_field_macro.git"  }
-alanthinker_dynamic_get_field_trait = { git = "https://github.com/alanthinker/alanthinker_dynamic_get_field_trait.git"  }
+pjson = { workspace = true }
+alanthinker_dynamic_get_field_trait = { workspace = true }
+alanthinker_dynamic_get_field_macro = { workspace = true } 
 lazy_static = "*"
 serde = "*"
 serde_json = "*"

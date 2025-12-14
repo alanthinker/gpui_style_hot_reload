@@ -8,7 +8,7 @@ use gpui_component::{
 };
 use std::{any::Any, path::PathBuf, thread};
 
-use alanthinker_dynamic_get_field_trait::DynamicGetter;
+use alanthinker_dynamic_get_field_trait::{call, DynamicGetter};
 use gpui::*;
 
 use crate::{
@@ -205,36 +205,18 @@ where
 
                     match &map.get("on_click").unwrap_or_default() {
                         serde_json::Value::String(on_click) => {
-                            if let Some(result) =
-                                alanthinker_dynamic_get_field_trait::find_method(on_click)
-                            {
-                                let view = cx.entity().downgrade();
-                                let result = result.call(e, &[&view]);
-
-                                match result {
-                                    Some(result) => {
-                                        // 👇 Attempt to downcast Box<dyn Any> into ownership of Box<dyn Fn(&ClickEvent, &mut Window, &mut App) + 'static>
-                                        match result.downcast::<Box<
-                                            dyn Fn(&ClickEvent, &mut Window, &mut App) + 'static,
-                                        >>() {
-                                            Ok(handler_box) => {
-                                                let handler: Box<
-                                                    dyn Fn(&ClickEvent, &mut Window, &mut App)
-                                                        + 'static,
-                                                > = *handler_box;
-                                                ele = ele.on_click(handler);
-                                            }
-                                            Err(_e) => {
-                                                tracing::error!("Failed to downcast: returned type [ about on click ]");
-                                            }
-                                        }
-                                    }
-                                    None => {
-                                        tracing::error!("result is None.");
-                                    }
+                            let view = cx.entity().downgrade();
+                            let r = call::call_and_downcast::<
+                                E,
+                                Box<dyn Fn(&ClickEvent, &mut Window, &mut App) + 'static>,
+                            >(on_click, e, &[&view]);
+                            match r {
+                                Ok(handler) => {
+                                    ele = ele.on_click(handler);
                                 }
-                            } else {
-                                tracing::error!("Failed to find method: {}", on_click);
+                                Err(e) => {
+                                    tracing::error!("Failed call_and_downcast, on_click: {:?}", e);
+                                }
                             }
                         }
                         _ => {
@@ -371,28 +353,17 @@ where
     match value {
         serde_json::Value::Object(map) => match &map.get("name").unwrap_or_default() {
             serde_json::Value::String(name) => {
-                if let Some(result) = alanthinker_dynamic_get_field_trait::find_method(name) {
-                    let result = result.call(e, &[]);
-
-                    match result {
-                        Some(result) => {
-                            // 👇 Attempt to downcast Box<dyn Any> into ownership of Box<dyn Fn(&mut E, &mut Context<'_, E>) -> AnyElement + 'static>
-                            match result.downcast::<Box<dyn Fn(&mut E, &mut Context<'_, E>) -> AnyElement + 'static>>() {
-                                Ok(child_fn) => {
-                                    let child = *child_fn;
-                                    ele.replace(child(e, cx));
-                                }
-                                Err(_e) => {
-                                    tracing::error!("Failed to downcast: returned type [ about on click ]");
-                                }
-                            }
-                        }
-                        None => {
-                            tracing::error!("result is None.");
-                        }
+                let r = call::call_and_downcast::<
+                    E,
+                    Box<dyn Fn(&mut E, &mut Context<'_, E>) -> AnyElement + 'static>,
+                >(name, e, &[]);
+                match r {
+                    Ok(child_fn) => {
+                        ele.replace(child_fn(e, cx));
                     }
-                } else {
-                    tracing::error!("Failed to find method: '{}'", name);
+                    Err(e) => {
+                        tracing::error!("Failed call_and_downcast, add_fn_by_json: {:?}", e);
+                    }
                 }
             }
             _ => {
