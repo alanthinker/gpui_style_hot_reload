@@ -45,8 +45,9 @@ dependencies = [
 [[package]]
 name = "alanthinker_dynamic_get_field_macro"
 version = "0.1.0"
+source = "git+https://github.com/alanthinker/alanthinker_dynamic_get_field_macro.git#31be9c85ec6620e22eae5b6fb0ab58b6c2f257b9"
 dependencies = [
- "alanthinker_dynamic_get_field_trait 0.1.0 (git+https://github.com/alanthinker/alanthinker_dynamic_get_field_trait.git)",
+ "alanthinker_dynamic_get_field_trait",
  "inventory",
  "proc-macro2",
  "quote",
@@ -56,15 +57,7 @@ dependencies = [
 [[package]]
 name = "alanthinker_dynamic_get_field_trait"
 version = "0.1.0"
-dependencies = [
- "anyhow",
- "inventory",
-]
-
-[[package]]
-name = "alanthinker_dynamic_get_field_trait"
-version = "0.1.0"
-source = "git+https://github.com/alanthinker/alanthinker_dynamic_get_field_trait.git#7c7da1311ab8baf1eb835adb45beecc7f686be12"
+source = "git+https://github.com/alanthinker/alanthinker_dynamic_get_field_trait.git#20327aeb7e3bcf0a811d1248a52c65bc559cfccb"
 dependencies = [
  "anyhow",
  "inventory",
@@ -2404,7 +2397,7 @@ name = "gpui_style_hot_reload"
 version = "0.1.0"
 dependencies = [
  "alanthinker_dynamic_get_field_macro",
- "alanthinker_dynamic_get_field_trait 0.1.0",
+ "alanthinker_dynamic_get_field_trait",
  "anyhow",
  "async-compat",
  "futures",
@@ -3164,7 +3157,7 @@ name = "layout_demo"
 version = "0.1.0"
 dependencies = [
  "alanthinker_dynamic_get_field_macro",
- "alanthinker_dynamic_get_field_trait 0.1.0",
+ "alanthinker_dynamic_get_field_trait",
  "anyhow",
  "async-compat",
  "async-io",
@@ -6060,7 +6053,7 @@ name = "todo_list"
 version = "0.1.0"
 dependencies = [
  "alanthinker_dynamic_get_field_macro",
- "alanthinker_dynamic_get_field_trait 0.1.0",
+ "alanthinker_dynamic_get_field_trait",
  "anyhow",
  "async-compat",
  "async-io",

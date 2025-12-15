@@ -60,16 +60,8 @@ impl TodoList {
         let mut entity = TodoList {
             new_item_state: new_item_state,
             max_id: 0,
-            sd: init_style_data(
-                cx,
-                r"D:\Projects\my_github\gpui_style_hot_reload\examples\todo_list\styles.pjson"
-                    .to_owned(),
-            ),
-            ld: init_layout_data(
-                cx,
-                r"D:\Projects\my_github\gpui_style_hot_reload\examples\todo_list\layout.pjson"
-                    .to_owned(),
-            ),
+            sd: init_style_data(cx, r"styles.pjson".to_owned()),
+            ld: init_layout_data(cx, r"layout.pjson".to_owned()),
             _subscriptions,
             todo_items,
             display_order: vec![],
