@@ -14,7 +14,10 @@ pub trait MyContextExt<T: 'static> {
         R: 'static,
         AsyncFn: AsyncFnOnce(WeakEntity<T>, &mut AsyncWindowContext) -> anyhow::Result<R> + 'static;
 
-    fn my_listener<E: ?Sized, R>(&self, f: impl Fn(&mut T, &E, &mut Window, &mut Context<T>) -> anyhow::Result<R> + 'static) -> impl Fn(&E, &mut Window, &mut App) + 'static
+    fn my_listener<E: ?Sized, R>(
+        &self,
+        f: impl Fn(&mut T, &E, &mut Window, &mut Context<T>) -> anyhow::Result<R> + 'static,
+    ) -> impl Fn(&E, &mut Window, &mut App) + 'static
     where
         R: 'static;
 }
@@ -84,7 +87,10 @@ impl<T: 'static> MyContextExt<T> for Context<'_, T> {
     }
 
     // Use anyhow to log error information
-    fn my_listener<E: ?Sized, R>(&self, f: impl Fn(&mut T, &E, &mut Window, &mut Context<T>) -> anyhow::Result<R> + 'static) -> impl Fn(&E, &mut Window, &mut App) + 'static
+    fn my_listener<E: ?Sized, R>(
+        &self,
+        f: impl Fn(&mut T, &E, &mut Window, &mut Context<T>) -> anyhow::Result<R> + 'static,
+    ) -> impl Fn(&E, &mut Window, &mut App) + 'static
     where
         R: 'static,
     {
@@ -101,13 +107,18 @@ impl<T: 'static> MyContextExt<T> for Context<'_, T> {
     }
 }
 
-pub fn listener_box<Ev: ?Sized, T>(weak_entity: WeakEntity<T>, f: impl Fn(&mut T, &Ev, &mut Window, &mut Context<T>) + 'static) -> Box<dyn Fn(&Ev, &mut Window, &mut App) + 'static>
+pub fn listener_box<Ev: ?Sized, T>(
+    weak_entity: WeakEntity<T>,
+    f: impl Fn(&mut T, &Ev, &mut Window, &mut Context<T>) + 'static,
+) -> Box<dyn Fn(&Ev, &mut Window, &mut App) + 'static>
 where
     T: 'static,
 {
     return Box::new({
         move |e: &Ev, window: &mut Window, cx: &mut App| {
-            weak_entity.update(cx, |view, cx| f(view, e, window, cx)).ok();
+            weak_entity
+                .update(cx, |view, cx| f(view, e, window, cx))
+                .ok();
         }
     });
 }

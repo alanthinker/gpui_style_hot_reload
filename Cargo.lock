@@ -45,13 +45,20 @@ dependencies = [
 [[package]]
 name = "alanthinker_dynamic_get_field_macro"
 version = "0.1.0"
-source = "git+https://github.com/alanthinker/alanthinker_dynamic_get_field_macro.git#edd24ec57a848847c95aff215fdd754bfa204e49"
 dependencies = [
- "alanthinker_dynamic_get_field_trait",
+ "alanthinker_dynamic_get_field_trait 0.1.0 (git+https://github.com/alanthinker/alanthinker_dynamic_get_field_trait.git)",
  "inventory",
  "proc-macro2",
  "quote",
  "syn 2.0.111",
+]
+
+[[package]]
+name = "alanthinker_dynamic_get_field_trait"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "inventory",
 ]
 
 [[package]]
@@ -2397,7 +2404,7 @@ name = "gpui_style_hot_reload"
 version = "0.1.0"
 dependencies = [
  "alanthinker_dynamic_get_field_macro",
- "alanthinker_dynamic_get_field_trait",
+ "alanthinker_dynamic_get_field_trait 0.1.0",
  "anyhow",
  "async-compat",
  "futures",
@@ -2895,7 +2902,7 @@ dependencies = [
  "rgb",
  "tiff",
  "zune-core 0.5.0",
- "zune-jpeg 0.5.6",
+ "zune-jpeg 0.5.7",
 ]
 
 [[package]]
@@ -3157,7 +3164,7 @@ name = "layout_demo"
 version = "0.1.0"
 dependencies = [
  "alanthinker_dynamic_get_field_macro",
- "alanthinker_dynamic_get_field_trait",
+ "alanthinker_dynamic_get_field_trait 0.1.0",
  "anyhow",
  "async-compat",
  "async-io",
@@ -3529,9 +3536,9 @@ dependencies = [
 
 [[package]]
 name = "moxcms"
-version = "0.7.10"
+version = "0.7.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "80986bbbcf925ebd3be54c26613d861255284584501595cf418320c078945608"
+checksum = "ac9557c559cd6fc9867e122e20d2cbefc9ca29d80d027a8e39310920ed2f0a97"
 dependencies = [
  "num-traits",
  "pxfm",
@@ -6053,7 +6060,7 @@ name = "todo_list"
 version = "0.1.0"
 dependencies = [
  "alanthinker_dynamic_get_field_macro",
- "alanthinker_dynamic_get_field_trait",
+ "alanthinker_dynamic_get_field_trait 0.1.0",
  "anyhow",
  "async-compat",
  "async-io",
@@ -7975,9 +7982,9 @@ dependencies = [
 
 [[package]]
 name = "zune-jpeg"
-version = "0.5.6"
+version = "0.5.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f520eebad972262a1dde0ec455bce4f8b298b1e5154513de58c114c4c54303e8"
+checksum = "51d915729b0e7d5fe35c2f294c5dc10b30207cc637920e5b59077bfa3da63f28"
 dependencies = [
  "zune-core 0.5.0",
 ]

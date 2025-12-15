@@ -1,7 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use alanthinker_dynamic_get_field_macro::{dynamic_method, DynamicGet};
-use alanthinker_dynamic_get_field_trait::DynamicGetter;
+use alanthinker_dynamic_get_field_macro::*;
+use alanthinker_dynamic_get_field_trait::*;
 
 #[allow(unused)]
 use anyhow::Context as _;
@@ -29,7 +29,7 @@ struct TodoItem {
     pub done: bool,
 }
 
-#[derive(DynamicGet, Debug)]
+#[derive(dynamic_fields, Debug)]
 struct TodoList {
     new_item_state: Entity<InputState>,
     todo_items: HashMap<u64, TodoItem>,
@@ -60,8 +60,16 @@ impl TodoList {
         let mut entity = TodoList {
             new_item_state: new_item_state,
             max_id: 0,
-            sd: init_style_data(cx, "styles.pjson".to_owned()),
-            ld: init_layout_data(cx, "layout.pjson".to_owned()),
+            sd: init_style_data(
+                cx,
+                r"D:\Projects\my_github\gpui_style_hot_reload\examples\todo_list\styles.pjson"
+                    .to_owned(),
+            ),
+            ld: init_layout_data(
+                cx,
+                r"D:\Projects\my_github\gpui_style_hot_reload\examples\todo_list\layout.pjson"
+                    .to_owned(),
+            ),
             _subscriptions,
             todo_items,
             display_order: vec![],
@@ -102,13 +110,6 @@ impl TodoList {
         };
     }
 
-    fn add_todo_item(&mut self, text: SharedString, done: bool) {
-        let this = self;
-        this.max_id += 1;
-        let id = this.max_id;
-        this.todo_items.insert(id, TodoItem { id, text, done });
-    }
-
     fn add_todo_item_ui(&mut self, window: &mut Window, cx: &mut Context<TodoList>) {
         let this = self;
         let text = this.new_item_state.get_my_text(cx);
@@ -138,6 +139,13 @@ impl TodoList {
         cx.notify();
     }
 
+    fn add_todo_item(&mut self, text: SharedString, done: bool) {
+        let this = self;
+        this.max_id += 1;
+        let id = this.max_id;
+        this.todo_items.insert(id, TodoItem { id, text, done });
+    }
+
     fn sort_items(&mut self) {
         let sort_by_name = self.sort_by_name;
         let items = &self.todo_items;
@@ -159,8 +167,10 @@ impl TodoList {
             }
         });
     }
+}
 
-    #[dynamic_method(TodoList)]
+#[dynamic_methods]
+impl TodoList {
     fn item_list_elements(
         &self,
     ) -> Box<dyn Fn(&mut TodoList, &mut Context<'_, TodoList>) -> AnyElement + 'static> {
@@ -230,34 +240,31 @@ impl TodoList {
         })
     }
 
-    #[dynamic_method(TodoList)]
     fn btn_add_click(
         &self,
-        entity: WeakEntity<TodoList>,
+        entity: &WeakEntity<TodoList>,
     ) -> Box<dyn Fn(&ClickEvent, &mut Window, &mut App) + 'static> {
-        my_listener_box(entity, |this, _event, window, cx| {
+        my_listener_box(entity.clone(), |this, _event, window, cx| {
             this.add_todo_item_ui(window, cx);
             Ok(())
         })
     }
 
-    #[dynamic_method(TodoList)]
     fn btn_bulk_add_click(
         &self,
-        entity: WeakEntity<TodoList>,
+        entity: &WeakEntity<TodoList>,
     ) -> Box<dyn Fn(&ClickEvent, &mut Window, &mut App) + 'static> {
-        my_listener_box(entity, |this, _event, window, cx| {
+        my_listener_box(entity.clone(), |this, _event, window, cx| {
             this.add_bulk_todo_item_ui(window, cx);
             Ok(())
         })
     }
 
-    #[dynamic_method(TodoList)]
     fn btn_remove_done_click(
         &self,
-        entity: WeakEntity<TodoList>,
+        entity: &WeakEntity<TodoList>,
     ) -> Box<dyn Fn(&ClickEvent, &mut Window, &mut App) + 'static> {
-        my_listener_box(entity, |this, _event, _window, cx| {
+        my_listener_box(entity.clone(), |this, _event, _window, cx| {
             this.todo_items.retain(|_k, v| !v.done);
             this.sort_items();
             cx.notify();

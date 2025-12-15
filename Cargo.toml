@@ -12,8 +12,10 @@ gpui = "0.2.2"
 gpui-macros = "0.2.2"
 gpui-component = "^0.5"
 pjson = { git = "https://github.com/alanthinker/PJson.git", package = "pjson" } 
-alanthinker_dynamic_get_field_macro = { git = "https://github.com/alanthinker/alanthinker_dynamic_get_field_macro.git"  }
-alanthinker_dynamic_get_field_trait = { git = "https://github.com/alanthinker/alanthinker_dynamic_get_field_trait.git"  }
+alanthinker_dynamic_get_field_trait = {path="D:/Projects/my_github/alanthinker_dynamic_get_field_trait"}
+alanthinker_dynamic_get_field_macro = {path="D:/Projects/my_github/alanthinker_dynamic_get_field_macro"}
+# alanthinker_dynamic_get_field_macro = { git = "https://github.com/alanthinker/alanthinker_dynamic_get_field_macro.git"  }
+# alanthinker_dynamic_get_field_trait = { git = "https://github.com/alanthinker/alanthinker_dynamic_get_field_trait.git"  }
 
 [dependencies]
 gpui = { workspace = true }

@@ -1,7 +1,7 @@
 #![cfg_attr(not(debug_assertions), windows_subsystem = "windows")]
 
-use alanthinker_dynamic_get_field_macro::{dynamic_method, DynamicGet};
-use alanthinker_dynamic_get_field_trait::DynamicGetter;
+use alanthinker_dynamic_get_field_macro::*;
+use alanthinker_dynamic_get_field_trait::*;
 
 #[allow(unused)]
 use anyhow::Context as _;
@@ -28,7 +28,7 @@ use gpui_style_hot_reload::my_text_input_ext::*;
 
 // === Main Component ===
 
-#[derive(DynamicGet)]
+#[derive(dynamic_fields)]
 struct HelloWorld {
     text: SharedString,
     text2: SharedString,
@@ -97,8 +97,10 @@ impl HelloWorld {
             _subscriptions, // Registered events must not be dropped, so store them in the global Entity.
         }
     }
+}
 
-    #[dynamic_method(HelloWorld)]
+#[dynamic_methods]
+impl HelloWorld {
     fn create_some_elements(
         &self,
     ) -> Box<dyn Fn(&mut HelloWorld, &mut Context<'_, HelloWorld>) -> AnyElement + 'static> {
@@ -122,12 +124,11 @@ impl HelloWorld {
         })
     }
 
-    #[dynamic_method(HelloWorld)]
     fn btn_simple_click(
         &self,
-        entity: WeakEntity<HelloWorld>,
+        entity: &WeakEntity<HelloWorld>,
     ) -> Box<dyn Fn(&ClickEvent, &mut Window, &mut App) + 'static> {
-        my_listener_box(entity, |this, _event, window, cx| {
+        my_listener_box(entity.clone(), |this, _event, window, cx| {
             let time = std::time::SystemTime::now()
                 .duration_since(std::time::UNIX_EPOCH)
                 .unwrap()
@@ -142,7 +143,7 @@ impl HelloWorld {
     }
 
     fn btn_simple_click2(
-        cx: &mut Context<'_, HelloWorld>,
+        cx: &Context<'_, HelloWorld>,
     ) -> impl Fn(&ClickEvent, &mut Window, &mut App) + 'static {
         cx.my_listener(|this, _event, window, cx| {
             let time = std::time::SystemTime::now()
@@ -158,12 +159,11 @@ impl HelloWorld {
         })
     }
 
-    #[dynamic_method(HelloWorld)]
     fn btn1_click(
         &self,
-        entity: WeakEntity<HelloWorld>,
+        entity: &WeakEntity<HelloWorld>,
     ) -> Box<dyn Fn(&ClickEvent, &mut Window, &mut App) + 'static> {
-        my_listener_box(entity, |_this, _event, window, cx| {
+        my_listener_box(entity.clone(), |_this, _event, window, cx| {
             // Basically all async requests can be handled with this logic
 
             // 1. Start async task
@@ -211,12 +211,11 @@ impl HelloWorld {
         })
     }
 
-    #[dynamic_method(HelloWorld)]
     fn btn2_click(
         &self,
-        entity: WeakEntity<HelloWorld>,
+        entity: &WeakEntity<HelloWorld>,
     ) -> Box<dyn Fn(&ClickEvent, &mut Window, &mut App) + 'static> {
-        my_listener_box(entity, |_this, _event, window, cx| {
+        my_listener_box(entity.clone(), |_this, _event, window, cx| {
             cx.my_spawn_in(window, async move |entity, window| {
                 // Update entity
                 entity.update_in(window, |this, window, cx| {
